@@ -1,4 +1,4 @@
-﻿package com.via.viatab.repository;
+package com.via.viatab.repository;
 
 import com.via.viatab.entity.ClickCounter;
 import org.springframework.data.jpa.repository.JpaRepository;

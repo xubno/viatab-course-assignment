@@ -1,4 +1,4 @@
-﻿package com.via.viatab.controller;
+package com.via.viatab.controller;
 
 import com.via.viatab.entity.ClickCounter;
 import com.via.viatab.service.ClickCounterService;

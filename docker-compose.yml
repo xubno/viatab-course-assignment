@@ -1,0 +1,47 @@
+﻿version: '3.8'
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: viatab-postgres
+    environment:
+      POSTGRES_DB: viatab
+      POSTGRES_USER: viatab_user
+      POSTGRES_PASSWORD: viatab_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - viatab-network
+
+  backend:
+    build: ./backend
+    container_name: viatab-backend
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/viatab
+      SPRING_DATASOURCE_USERNAME: viatab_user
+      SPRING_DATASOURCE_PASSWORD: viatab_password
+    ports:
+      - "8080:8080"
+    networks:
+      - viatab-network
+
+  frontend:
+    build: ./frontend
+    container_name: viatab-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - viatab-network
+
+volumes:
+  postgres_data:
+
+networks:
+  viatab-network:
+    driver: bridge

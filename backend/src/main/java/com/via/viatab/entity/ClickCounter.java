@@ -1,4 +1,4 @@
-﻿package com.via.viatab.entity;
+package com.via.viatab.entity;
 
 import jakarta.persistence.*;
 
@@ -15,7 +15,6 @@ public class ClickCounter {
     @Column(name = "department")
     private String department;
     
-    // Constructors
     public ClickCounter() {}
     
     public ClickCounter(String department, Long countValue) {
@@ -23,7 +22,6 @@ public class ClickCounter {
         this.countValue = countValue;
     }
     
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

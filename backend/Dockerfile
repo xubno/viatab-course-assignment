@@ -1,25 +1,14 @@
-﻿# Use official OpenJDK runtime as base image
-FROM openjdk:17-jdk-slim
-
-# Set working directory
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
-
-# Copy Maven wrapper and pom.xml
-COPY mvnw.cmd mvnw.cmd
-COPY .mvn .mvn
 COPY pom.xml .
-
-# Download dependencies (Windows compatible)
-RUN ./mvnw.cmd dependency:go-offline -B
-
-# Copy source code
+RUN mvn dependency:go-offline -B
 COPY src src
+RUN mvn clean package -DskipTests
 
-# Build the application
-RUN ./mvnw.cmd clean package -DskipTests
-
-# Expose port
+# Runtime stage
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/target/viatab-backend-1.0.0.jar app.jar
 EXPOSE 8080
-
-# Run the application
-CMD ["java", "-jar", "target/viatab-backend-1.0.0.jar"]
+CMD ["java", "-jar", "app.jar"]

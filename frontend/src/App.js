@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -10,10 +10,10 @@ function App() {
     const newCounters = {};
     for (const dept of departments) {
       try {
-        const response = await axios.get(/api/clicks/+dept);
+        const response = await axios.get(`/api/clicks/${dept}`);
         newCounters[dept] = response.data.countValue || 0;
       } catch (error) {
-        console.error(Error fetching +dept+:, error);
+        console.error(`Error fetching ${dept}:`, error);
         newCounters[dept] = 0;
       }
     }
@@ -22,19 +22,21 @@ function App() {
 
   const incrementCounter = async (department) => {
     try {
-      const response = await axios.post(/api/clicks/increment/+department);
+      const response = await axios.post(`/api/clicks/increment/${department}`);
       setCounters(prev => ({
         ...prev,
         [department]: response.data.countValue
       }));
     } catch (error) {
-      console.error(Error incrementing +department+:, error);
+      console.error(`Error incrementing ${department}:`, error);
     }
   };
 
   useEffect(() => {
     fetchCounters();
-  }, []);
+    const interval = setInterval(fetchCounters, 5000);
+    return () => clearInterval(interval);
+  }, [departments]);
 
   return (
     <div className="App">

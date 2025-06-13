@@ -1,4 +1,4 @@
-﻿package com.via.viatab.service;
+package com.via.viatab.service;
 
 import com.via.viatab.entity.ClickCounter;
 import com.via.viatab.repository.ClickCounterRepository;

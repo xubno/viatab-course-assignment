@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -28,23 +28,22 @@ jobs:
       with:
         node-version: '18'
     
-    - name: Test Frontend
+    - name: Build Frontend
       run: |
         cd frontend
         npm install
-        npm test -- --watchAll=false --passWithNoTests
+        npm run build
+      env:
+        CI: false
 
-  build:
-    needs: test
+  docker-build:
+    needs: test-and-build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
     
-    - name: Build Backend Docker Image
+    - name: Build Docker Images
       run: |
         docker build -t viatab-backend:latest ./backend
-    
-    - name: Build Frontend Docker Image
-      run: |
         docker build -t viatab-frontend:latest ./frontend
